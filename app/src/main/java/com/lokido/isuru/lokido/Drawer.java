@@ -412,5 +412,4 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         fingerprint = 1;
         //                btnLock.setBackgroundColor(Color.GREEN);
     }
-//    Intent mIntent = new Intent(drawer, FingerprintHandler.class);
 }
