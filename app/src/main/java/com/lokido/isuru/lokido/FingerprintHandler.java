@@ -2,6 +2,7 @@ package com.lokido.isuru.lokido;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
@@ -27,6 +28,8 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     public FingerprintHandler(Context mContext) {
         context = mContext;
     }
+
+    //We have used fingerprint authentication as a securty measure to authenticate users
 
     //Implement the startAuth method, which is responsible for starting the fingerprint authentication process//
 
@@ -71,18 +74,22 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
 
         Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
 
+        context.startActivity(new Intent(context, Drawer.class));
+
 //        FingerprintActivity success =  new FingerprintActivity();
 //        success.successunlock();
 //        Drawer log=new Drawer();
 //        log.unlock();
 
-                success();
+//                success();
 
 
     }
     public void success(){
         fingerprint = 1;
-//        context.startActivity(( new Intent intent(this, Drawer.class)));
+//
+//        Button btnLock = (Button) getClass(Drawer).findViewById(R.id.btnLock);
+//        btnLock.setBackgroundColor(getResources().getColor(R.color.green));
 
     }
 

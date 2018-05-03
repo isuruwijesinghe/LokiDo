@@ -72,17 +72,22 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        //We have used authorization & aithentication to the user login considering security issues
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
+                //Displaying en error message to the user if the email address has not been entered to apply HCI issues
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+
+                //Displaying en error message to the user if the  password has not been entered to apply HCI issues
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
                     return;

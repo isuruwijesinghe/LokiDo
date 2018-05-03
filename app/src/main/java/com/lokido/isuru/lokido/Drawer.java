@@ -30,8 +30,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private ProgressBar progressBar;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
-    int fingerprint ;
-
+    int fingerprint;
 
 
     @Override
@@ -64,7 +63,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
             }
         };
 
-         btnLock = (Button) findViewById(R.id.btnLock);
+        btnLock = (Button) findViewById(R.id.btnLock);
 
 //        btnChangeEmail = (Button) findViewById(R.id.change_email_button);
 //        btnChangePassword = (Button) findViewById(R.id.change_password_button);
@@ -95,20 +94,20 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 //        if (progressBar != null) {
 //            progressBar.setVisibility(View.GONE);
 //        }
-            btnLock.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        btnLock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                    Intent i = new Intent(v.getContext(), FingerprintActivity.class);
 //                    startActivity(i);
-                    if (fingerprint == 1){
-                        v.setBackgroundColor(Color.GREEN);
-                    }else {
-                        Intent x = new Intent(v.getContext(), FingerprintActivity.class);
-                        startActivity(x);
-                    }
-
+                if (fingerprint == 1) {
+                    v.setBackgroundColor(Color.GREEN);
+                } else {
+                    Intent x = new Intent(v.getContext(), FingerprintActivity.class);
+                    startActivity(x);
                 }
-            });
+
+            }
+        });
 //
 //        btnChangeEmail.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -283,10 +282,11 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View hView = navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.textViewUserEmail);
+        TextView nav_user = (TextView) hView.findViewById(R.id.textViewUserEmail);
 
         nav_user.setText(nav_email);
         System.out.println("User details................." + user);
+
 
     }
 
@@ -400,14 +400,17 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         auth.signOut();
         startActivity(new Intent(Drawer.this, LoginActivity.class));
     }
+
     public Drawer drawer;
-    public void unlock(Drawer drawer){
+
+    public void unlock(Drawer drawer) {
         this.drawer = drawer;
 
         System.out.println("LOgin SUCCESSSSSSSSSSS N!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         btnLock.callOnClick();
+
         fingerprint = 1;
         //                btnLock.setBackgroundColor(Color.GREEN);
     }
-    Intent mIntent = new Intent(drawer, FingerprintHandler.class);
+//    Intent mIntent = new Intent(drawer, FingerprintHandler.class);
 }
