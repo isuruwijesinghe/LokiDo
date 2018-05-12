@@ -3,12 +3,15 @@ package com.lokido.isuru.lokido;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Isuru on 4/3/2018.
@@ -24,6 +27,7 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     private Context context;
 
     int fingerprint;
+    String appPref;
 
     public FingerprintHandler(Context mContext) {
         context = mContext;
@@ -73,23 +77,17 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
     public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
 
         Toast.makeText(context, "Success!", Toast.LENGTH_LONG).show();
-
+        success();
         context.startActivity(new Intent(context, Drawer.class));
-
-//        FingerprintActivity success =  new FingerprintActivity();
-//        success.successunlock();
-//        Drawer log=new Drawer();
-//        log.unlock();
-
-//                success();
 
 
     }
     public void success(){
-        fingerprint = 1;
-//
-//        Button btnLock = (Button) getClass(Drawer).findViewById(R.id.btnLock);
-//        btnLock.setBackgroundColor(getResources().getColor(R.color.green));
+
+        SharedPreferences sharedPref = context.getSharedPreferences(appPref,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean("lockbuttonStatus",true);
+        editor.apply();
 
     }
 

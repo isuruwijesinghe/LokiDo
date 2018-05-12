@@ -16,6 +16,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up_short">Sign up</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -35,7 +36,7 @@
     <!--<string name="app_name">Firebase Auth</string>-->
     <!--<string name="action_sign_in_short">Register</string>-->
     <string name="email">Email</string>
-    <string name="name">name</string>
+    <string name="name">Name</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
     <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
     <string name="change_email">Change Email</string>

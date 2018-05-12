@@ -44,17 +44,18 @@
             android:text="Lock Name "
             android:textSize="18sp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnLock"
             android:layout_width="55dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/textLockName"
-            android:background="@color/colorPrimary"
-            android:text="@string/btnLock"
+            android:background="@drawable/button_lock"
+            android:src="@drawable/ic_lock_black_24dp"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+
 
         <TextView
             android:id="@+id/textLockID"

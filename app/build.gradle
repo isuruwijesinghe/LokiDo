@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.lokido.isuru.lokido"
-        minSdkVersion 23
+        minSdkVersion 22
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -36,13 +36,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.8'
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
 //    compile 'com.google.android.gms:play-services:8.3.0'
     implementation 'com.google.android.gms:play-services-maps:12.0.1'
     implementation 'com.google.android.gms:play-services:12.0.1'
 //    implementation 'com.github.yalantis:Side-Menu.Android:1.0.1'
 //    implementation 'com.github.ozodrukh:CircularReveal:(latest-release)@aar'
-    compile 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.google.firebase:firebase-core:12.0.1'
     implementation "com.android.support:cardview-v7:26.1.0"
