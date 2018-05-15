@@ -151,13 +151,13 @@
             android:textStyle="bold" />
 
         <Button
-            android:id="@+id/sign_out"
+            android:id="@+id/btn_change_pin"
             style="?android:textAppearanceSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
-            android:text="@string/btn_sign_out"
+            android:text="@string/btn_changepin"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 

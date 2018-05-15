@@ -67,6 +67,10 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".UserSettingsActivity" />
         <activity android:name=".FingerprintActivity"></activity>
+        <activity android:name="com.lokido.isuru.lokido.CustomPinActivity" />
+        <activity android:name=".PinDisablePopup"
+            android:theme="@style/AppTheme.popupTheme">
+        </activity>
     </application>
 
 </manifest>

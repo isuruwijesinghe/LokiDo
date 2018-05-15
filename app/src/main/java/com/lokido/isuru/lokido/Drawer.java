@@ -22,8 +22,11 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.omadahealth.lollipin.lib.managers.AppLock;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ImageButton btnLock;
@@ -32,10 +35,13 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
     private ProgressBar progressBar;
     private FirebaseAuth.AuthStateListener authListener;
     private FirebaseAuth auth;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     String appPref;
     Boolean lockbuttonStatus;
     int clickListener = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +53,14 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         //get firebase auth instance
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+
         //get current user
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String nav_email = user.getEmail();
+
+
         //check lock status
         checkLockStatus();
 
@@ -69,6 +80,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         btnLock = (ImageButton) findViewById(R.id.btnLock);
 
         btnLock.setOnClickListener(new View.OnClickListener() {
+            Intent intent = new Intent(Drawer.this, CustomPinActivity.class);
             @Override
             public void onClick(View v) {
                 if(clickListener == 0){
@@ -83,16 +95,27 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
                 Boolean lockbuttonStatus = sharedPref.getBoolean("lockbuttonStatus", false);
                 System.out.println("lock Button Status :"+lockbuttonStatus);
-
+                getTheNameNPin();
                 if (lockbuttonStatus == true) {
                     btnLock.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
                     clickListener = 1;
                 } else {
-                    Intent x = new Intent(Drawer.this, FingerprintActivity.class);
-                    startActivity(x);
+//                    Intent x = new Intent(Drawer.this, FingerprintActivity.class);
+//                    startActivity(x);
+                    intent.putExtra(AppLock.EXTRA_TYPE, AppLock.UNLOCK_PIN);
+                    startActivity(intent);
 
                 }
 
+            }
+            public void getTheNameNPin(){
+                SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
+                String name = sharedPref.getString("username","Isuru");
+                System.out.println("Name :"+name);
+                String pin = sharedPref.getString("Pin","1234");
+                System.out.println("Pin is :"+pin);
+                myRef = database.getReference("users").child(name);
+                myRef.child("pin").setValue(pin.toString());
             }
             public void lock(){
                 System.out.println("Came to lock mehod");
@@ -160,9 +183,7 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.logout) {
-            System.out.println("signout is working");
-            signout();
-            finish();
+            startActivity(new Intent(Drawer.this,PinDisablePopup.class));
             return true;
         }
 
@@ -218,7 +239,16 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         btnLock = (ImageButton) findViewById(R.id.btnLock);
         SharedPreferences sharedPref = getSharedPreferences(appPref, MODE_PRIVATE);
         Boolean lockbuttonStatus = sharedPref.getBoolean("lockbuttonStatus", false);
+        String passcode = sharedPref.getString("Pin","1234");
+        System.out.println("Pin is  :" + passcode);
         System.out.println("lock Button Status :" + lockbuttonStatus);
+        //Db
+        String name = sharedPref.getString("username","Isuru");
+        System.out.println("Name :"+name);
+        String pin = sharedPref.getString("Pin","1234");
+        System.out.println("Pin is :"+pin);
+        myRef = database.getReference("users").child(name);
+        myRef.child("pin").setValue(pin.toString());
 
         if (lockbuttonStatus == true) {
             btnLock.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);

@@ -61,6 +61,7 @@
     <string name="btn_send">Send</string>
     <string name="btn_remove">Remove</string>
     <string name="btn_sign_out">Sign Out</string>
+    <string name="btn_changepin">Chanage Pin</string>
     <string name="lbl_forgot_password">Forgot password?</string>
     <string name="forgot_password_msg">We just need your registered Email Id to sent you password reset instructions.</string>
 
@@ -70,4 +71,11 @@
     <string name="btnRemoveLock">Remove Lock</string>
 
     <string name="instructions">Place your fingertip on the Home button to verify your identity</string>
+
+    <!--pin-->
+    <string name="activity_dialog_title">Forgot you Pincode?</string>
+    <string name="activity_dialog_accept">OK</string>
+    <string name="activity_dialog_decline">CANCEL</string>
+    <string name="activity_dialog_content">Tap \'OK\' to log out, when you log back in you\'ll be able to create a new Pincode.\n\nIf you remember your Pincode, tap \'Cancel\' to go back.</string>
+    <string name="popup">Do you want to remove pin bofore you logout ?</string>
 </resources>

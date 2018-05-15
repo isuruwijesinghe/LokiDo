@@ -3,8 +3,6 @@ package com.lokido.isuru.lokido;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.github.omadahealth.lollipin.lib.managers.AppLock;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class UserSettingsActivity extends AppCompatActivity   {
 
     private Button btnChangeEmail, btnChangePassword, btnSendResetEmail, btnRemoveUser,
-            changeEmail, changePassword, sendEmail, remove, signOut;
+            changeEmail, changePassword, sendEmail, remove, changepin;
 
     private EditText oldEmail, newEmail, password, newPassword;
     private ProgressBar progressBar;
@@ -67,7 +66,7 @@ public class UserSettingsActivity extends AppCompatActivity   {
         changePassword = (Button) findViewById(R.id.changePass);
         sendEmail = (Button) findViewById(R.id.send);
         remove = (Button) findViewById(R.id.remove);
-        signOut = (Button) findViewById(R.id.sign_out);
+        changepin = (Button) findViewById(R.id.btn_change_pin);
 
         oldEmail = (EditText) findViewById(R.id.old_email);
         newEmail = (EditText) findViewById(R.id.new_email);
@@ -237,10 +236,12 @@ public class UserSettingsActivity extends AppCompatActivity   {
             }
         });
 
-        signOut.setOnClickListener(new View.OnClickListener() {
+        changepin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signout();
+                Intent intent = new Intent(UserSettingsActivity.this, CustomPinActivity.class);
+                intent.putExtra(AppLock.EXTRA_TYPE, AppLock.CONFIRM_PIN);
+                startActivity(intent);
             }
         });
 
@@ -268,12 +269,8 @@ public class UserSettingsActivity extends AppCompatActivity   {
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        startActivity(new Intent(this, Drawer.class));
+        finish();
     }
 
     @Override
@@ -292,8 +289,7 @@ public class UserSettingsActivity extends AppCompatActivity   {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.logout) {
-            System.out.println("signout is working");
-            signout();
+            startActivity(new Intent(this, PinDisablePopup.class));
             finish();
             return true;
         }if (id == R.id.home){
