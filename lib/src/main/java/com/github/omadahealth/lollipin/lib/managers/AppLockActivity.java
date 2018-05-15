@@ -55,6 +55,7 @@ public abstract class AppLockActivity extends PinActivity implements KeyboardBut
     protected String mOldPinCode;
 
     private boolean isCodeSuccessful = false;
+    String defPassCode = "1234";
 
     /**
      * First creation
@@ -285,7 +286,7 @@ public abstract class AppLockActivity extends PinActivity implements KeyboardBut
             case AppLock.DISABLE_PINLOCK:
                 if (mLockManager.getAppLock().checkPasscode(mPinCode)) {
                     setResult(RESULT_OK);
-                    mLockManager.getAppLock().setPasscode(null);
+                    mLockManager.getAppLock().setPasscode(defPassCode);
                     onPinCodeSuccess();
                     finish();
                 } else {
