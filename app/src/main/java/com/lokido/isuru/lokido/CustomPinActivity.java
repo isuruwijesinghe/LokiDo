@@ -9,12 +9,20 @@ import android.graphics.drawable.ColorDrawable;
 import android.widget.Toast;
 
 import com.github.omadahealth.lollipin.lib.managers.AppLockActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import uk.me.lewisdeane.ldialogs.BaseDialog;
 import uk.me.lewisdeane.ldialogs.CustomDialog;
 
 public class CustomPinActivity extends AppLockActivity {
     String appPref;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
 
     @Override
     public void showForgotDialog() {
@@ -73,8 +81,24 @@ public class CustomPinActivity extends AppLockActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean("lockbuttonStatus",true);
         editor.apply();
+        saveToLog();
         startActivity(new Intent(CustomPinActivity.this, Drawer.class));
         finish();
+    }
+    public void saveToLog(){
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
+        SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(currentTime);
+        String formattedDateOnly = date.format(currentTime);
+        SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
+        String name = sharedPref.getString("userName","Isuru");
+        String address = sharedPref.getString("userAddress","address");
+        System.out.println(formattedDate+" "+name+" unlocked the PadLock in "+address);
+        String forDb = " "+name+" unlocked the PadLock in "+address;
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("log").child(name).child(formattedDateOnly);
+        myRef.child(formattedDate).setValue(forDb.toString());
     }
 
     @Override

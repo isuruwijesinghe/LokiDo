@@ -21,12 +21,17 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.omadahealth.lollipin.lib.managers.AppLock;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Drawer extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private ImageButton btnLock;
@@ -95,27 +100,20 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
                 Boolean lockbuttonStatus = sharedPref.getBoolean("lockbuttonStatus", false);
                 System.out.println("lock Button Status :"+lockbuttonStatus);
-                getTheNameNPin();
                 if (lockbuttonStatus == true) {
+                    Date currentTime = Calendar.getInstance().getTime();
+                    String name = sharedPref.getString("userName","Isuru");
+                    String address = sharedPref.getString("userAddress","address");
+                    System.out.println(currentTime+" "+name+" unlocked the PadLock in "+address);
                     btnLock.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);
                     clickListener = 1;
                 } else {
-//                    Intent x = new Intent(Drawer.this, FingerprintActivity.class);
-//                    startActivity(x);
+                    //goes to the pin
                     intent.putExtra(AppLock.EXTRA_TYPE, AppLock.UNLOCK_PIN);
                     startActivity(intent);
 
                 }
 
-            }
-            public void getTheNameNPin(){
-                SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
-                String name = sharedPref.getString("username","Isuru");
-                System.out.println("Name :"+name);
-                String pin = sharedPref.getString("Pin","1234");
-                System.out.println("Pin is :"+pin);
-                myRef = database.getReference("users").child(name);
-                myRef.child("pin").setValue(pin.toString());
             }
             public void lock(){
                 System.out.println("Came to lock mehod");
@@ -123,6 +121,19 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putBoolean("lockbuttonStatus",false);
                 editor.apply();
+                Date currentTime = Calendar.getInstance().getTime();
+                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
+                SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+                String formattedDate = df.format(currentTime);
+                String formattedDateOnly = date.format(currentTime);
+                String name = sharedPref.getString("userName","Isuru");
+                String address = sharedPref.getString("userAddress","address");
+                System.out.println(formattedDate+" "+name+" locked the PadLock in "+address);
+                String forDb = " "+name+" locked the PadLock in "+address;
+                database = FirebaseDatabase.getInstance();
+                myRef = database.getReference("log").child(name).child(formattedDateOnly);
+                myRef.child(formattedDate).setValue(forDb.toString());
+                Toast.makeText(Drawer.this, getString(R.string.btnLock), Toast.LENGTH_SHORT).show();
                 btnLock.getBackground().setColorFilter(getResources().getColor(R.color.btn_lock), PorterDuff.Mode.SRC_IN);
                 clickListener = 0;
             }
@@ -243,12 +254,12 @@ public class Drawer extends AppCompatActivity implements NavigationView.OnNaviga
         System.out.println("Pin is  :" + passcode);
         System.out.println("lock Button Status :" + lockbuttonStatus);
         //Db
-        String name = sharedPref.getString("username","Isuru");
+        String name = sharedPref.getString("userName","Isuru");
         System.out.println("Name :"+name);
         String pin = sharedPref.getString("Pin","1234");
         System.out.println("Pin is :"+pin);
-        myRef = database.getReference("users").child(name);
-        myRef.child("pin").setValue(pin.toString());
+//        myRef = database.getReference("users").child(name);
+//        myRef.child("pin").setValue(pin.toString());
 
         if (lockbuttonStatus == true) {
             btnLock.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.SRC_IN);

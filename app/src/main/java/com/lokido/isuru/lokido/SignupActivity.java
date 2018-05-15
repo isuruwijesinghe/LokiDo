@@ -20,6 +20,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -123,11 +127,22 @@ public class SignupActivity extends AppCompatActivity {
                         if (!task.isSuccessful()) {
                             Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_SHORT).show();
                         } else {
+                            Date currentTime = Calendar.getInstance().getTime();
+                            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
+                            SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+                            String formattedDate = df.format(currentTime);
+                            String formattedDateOnly = date.format(currentTime);
                             SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("username",inputName.getText().toString());
+                            editor.putString("userName",inputName.getText().toString());
+                            editor.putString("userEmail",inputEmail.getText().toString());
                             editor.apply();
                             startActivity(new Intent(SignupActivity.this, Drawer.class));
+                            System.out.println(formattedDate+" "+inputName.getText().toString()+" "+"Signed up.");
+                            String forDb = " "+inputName.getText().toString()+" "+"Signed up.";
+                            database = FirebaseDatabase.getInstance();
+                            myRef = database.getReference("log").child(inputName.getText().toString()).child(formattedDateOnly);
+                            myRef.child(formattedDate).setValue(forDb.toString());
                             finish();
                         }
                     }

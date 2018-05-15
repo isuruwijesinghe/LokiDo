@@ -1,6 +1,7 @@
 package com.lokido.isuru.lokido;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * A login screen that offers login via email/password.
@@ -27,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnSignup;
     private Button btnLogin;
     private Button btnReset;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    String appPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +47,11 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this, Drawer.class));
-            System.out.println("Going to drawer class because user alreaddy logged in");
-            finish();
+            succeed();
+//            finish();
         }
 
         // set the view now
@@ -56,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = inputEmail.getText().toString();
+                final String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 
                 //Displaying en error message to the user if the email address has not been entered to apply HCI issues
@@ -112,14 +126,65 @@ public class LoginActivity extends AppCompatActivity {
                                         Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG).show();
                                     }
                                 } else {
-                                    Intent intent = new Intent(LoginActivity.this, Drawer.class);
-                                    startActivity(intent);
-                                    finish();
+                                    try{
+                                        succeed();
+                                    }catch(Exception e){
+                                        System.out.println(e);
+                                    }
+
                                 }
+
                             }
                         });
+
             }
         });
+    }
+    public void succeed() {
+        try{
+            myRef = database.getReference("users");
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot email : dataSnapshot.getChildren()) {
+                        String umail = auth.getCurrentUser().getEmail().toString();
+                        if(inputEmail.getText().toString().equals(email.child("email").getValue().toString()) || umail.toString().equals(email.child("email").getValue().toString())){
+                            Date currentTime = Calendar.getInstance().getTime();
+                            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
+                            SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+                            String formattedDate = df.format(currentTime);
+                            String formattedDateOnly = date.format(currentTime);
+                            String username = email.child("username").getValue().toString();
+                            SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("userEmail",inputEmail.getText().toString());
+                            editor.putString("userName" ,username.toString());
+                            editor.apply();
+                            Intent intent = new Intent(LoginActivity.this, Drawer.class);
+                            startActivity(intent);
+                            Toast.makeText(LoginActivity.this, getString(R.string.succeed), Toast.LENGTH_SHORT).show();
+                            System.out.println(formattedDate+" "+username+" "+"Logged in.");
+                            String forDb = " "+username+" "+"Logged in.";
+                            database = FirebaseDatabase.getInstance();
+                            myRef = database.getReference("log").child(username).child(formattedDateOnly);
+                            myRef.child(formattedDate).setValue(forDb.toString());
+                            finish();
+                        }
+//                        else{
+//                            Toast.makeText(LoginActivity.this, getString(R.string.succeed), Toast.LENGTH_SHORT).show();
+//                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    System.out.println("Error"+databaseError);
+                }
+            });
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package com.lokido.isuru.lokido;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -10,10 +11,19 @@ import android.widget.Button;
 
 import com.github.omadahealth.lollipin.lib.managers.AppLock;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class PinDisablePopup extends Activity {
 
     private FirebaseAuth auth;
+    private FirebaseDatabase database;
+    private DatabaseReference myRef;
+    String appPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +72,18 @@ public class PinDisablePopup extends Activity {
     }
     public void signout(){
         auth.signOut();
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss a");
+        SimpleDateFormat date = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(currentTime);
+        String formattedDateOnly = date.format(currentTime);
+        SharedPreferences sharedPref = getSharedPreferences(appPref, MODE_PRIVATE);
+        String name = sharedPref.getString("userName","Isuru");
+        System.out.println(formattedDate+" "+name+" "+"Logged out.");
+        String forDb = " "+name+" "+"Logged out.";
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("log").child(name).child(formattedDateOnly);
+        myRef.child(formattedDate).setValue(forDb.toString());
         startActivity(new Intent(PinDisablePopup.this, LoginActivity.class));
     }
 }

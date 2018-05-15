@@ -1,6 +1,7 @@
 package com.lokido.isuru.lokido;
 
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
@@ -29,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, OnMapReadyCallback {
+    String appPref;
 
     public static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -100,9 +102,6 @@ public class MapsActivity extends FragmentActivity implements
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            System.out.println("Fuck This Map");
-            System.out.println("Fuck This Map");
-            System.out.println("Fuck This Map");
             ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 //            SupportMapFragment mapFrag = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragment_map);
 //            mapFrag.getMapAsync(this);
@@ -159,6 +158,11 @@ public class MapsActivity extends FragmentActivity implements
         mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+        SharedPreferences sharedPref = getSharedPreferences(appPref,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("userAddress", Adrsstitle);
+        editor.apply();
     }
 
 
